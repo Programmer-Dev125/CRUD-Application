@@ -12,6 +12,7 @@ export default function Post({ updateState }) {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        authorization: `${btoa("AbdulAhad2abc1071099")}`,
       },
       body: JSON.stringify({ name: user, age: age, email: email }),
     });
@@ -42,6 +43,7 @@ export default function Post({ updateState }) {
             placeholder="user"
             value={user}
             onChange={(e) => setUser(e.target.value)}
+            required
           />
         </div>
         <div>
@@ -51,6 +53,7 @@ export default function Post({ updateState }) {
             placeholder="age"
             value={age}
             onChange={(e) => setAge(e.target.value)}
+            required
           />
         </div>
         <div>
@@ -60,6 +63,7 @@ export default function Post({ updateState }) {
             placeholder="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
         <div>

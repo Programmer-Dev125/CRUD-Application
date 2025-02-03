@@ -12,6 +12,7 @@ export default function Put({ tag, handleMain, updatePut }) {
       headers: {
         "content-type": "application/json",
         "x-user-id": tag.id,
+        authorization: `${btoa("AbdulAhad2abc1071099")}`,
       },
       body: JSON.stringify({ name: name, age: age, email: email }),
     });
@@ -37,6 +38,7 @@ export default function Put({ tag, handleMain, updatePut }) {
                 placeholder="Enter username"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                required
               />
             </div>
             <div>
@@ -45,6 +47,7 @@ export default function Put({ tag, handleMain, updatePut }) {
                 placeholder="Enter age"
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
+                required
               />
             </div>
             <div>
@@ -53,6 +56,7 @@ export default function Put({ tag, handleMain, updatePut }) {
                 placeholder="Enter Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
           </form>

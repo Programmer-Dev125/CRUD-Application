@@ -4,6 +4,7 @@ export default function Delete({ tag, handleMain, updateDelete }) {
       method: "DELETE",
       headers: {
         "x-user-id": tag.id,
+        authorization: `${btoa("AbdulAhad2abc1071099")}`,
       },
     });
     if (isFetch.status === 200) {

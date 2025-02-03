@@ -8,9 +8,18 @@ export default function Main() {
 
   useEffect(() => {
     (async () => {
-      const isFetch = await fetch("http://localhost:3000/users");
-      const isResp = await isFetch.json();
-      setUsers(isResp);
+      const isFetch = await fetch("http://localhost:3000/users", {
+        headers: {
+          Authorization: `${btoa("AbdulAhad2abc1071099")}`,
+        },
+      });
+      if (isFetch.status === 401) {
+        const isResp = await isFetch.text();
+        console.log(isResp);
+      } else if (isFetch.status === 200) {
+        const isResp = await isFetch.json();
+        setUsers(isResp);
+      }
     })();
   }, [isUpdate]);
 
