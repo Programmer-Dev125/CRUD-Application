@@ -19,24 +19,27 @@ export default function Post({ updateState }) {
     document.querySelectorAll(".valid").forEach((value) => {
       value.classList.remove("valid");
     });
-    const isFetch = await fetch("http://localhost:3000/users", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        authorization: `${btoa("AbdulAhad2abc1071099")}`,
-      },
-      body: JSON.stringify({ name: user, age: age, email: email }),
-    });
+    const isFetch = await fetch(
+      "https://crud-application-nine-kohl.vercel.app/api/mongo",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `${btoa("AbdulAhad2abc1071099")}`,
+        },
+        body: JSON.stringify({ name: user, age: age, email: email }),
+      }
+    );
     if (isFetch.status === 201) {
       const isResp = await isFetch.json();
-      alert(isResp.message);
+      alert(isResp.success);
       updateState();
     } else if (isFetch.status === 400) {
       const isFailure = await isFetch.json();
-      alert(isFailure.message);
+      alert(isFailure.error);
     } else if (isFetch.status === 409) {
       const isConflict = await isFetch.json();
-      alert(isConflict.message);
+      alert(isConflict.error);
     }
     setUser("");
     setAge("");

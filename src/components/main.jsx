@@ -8,17 +8,20 @@ export default function Main() {
 
   useEffect(() => {
     (async () => {
-      const isFetch = await fetch("http://localhost:3000/users", {
-        headers: {
-          Authorization: `${btoa("AbdulAhad2abc1071099")}`,
-        },
-      });
+      const isFetch = await fetch(
+        "https://crud-application-nine-kohl.vercel.app/api/mongo",
+        {
+          headers: {
+            Authorization: `${btoa("AbdulAhad2abc1071099")}`,
+          },
+        }
+      );
       if (isFetch.status === 401) {
         const isResp = await isFetch.text();
         alert(isResp);
       } else if (isFetch.status === 500) {
         const isResp = await isFetch.json();
-        alert(isResp.message);
+        alert(isResp.error);
       } else if (isFetch.status === 200) {
         const isResp = await isFetch.json();
         setUsers(isResp);
