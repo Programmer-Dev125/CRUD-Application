@@ -57,7 +57,12 @@ export default async function handleServer(req, res) {
           });
           const isId = lastId ? lastId + 1 : 1;
           const toCreate = await isModel.create(
-            { id: isId, ...isBody },
+            {
+              id: isId,
+              name: isBody.name,
+              age: parseInt(isBody.age),
+              email: isBody.email,
+            },
             { ordered: true }
           );
           if (toCreate) {
