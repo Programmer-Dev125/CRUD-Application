@@ -15,7 +15,10 @@ export default function Main() {
       });
       if (isFetch.status === 401) {
         const isResp = await isFetch.text();
-        console.log(isResp);
+        alert(isResp);
+      } else if (isFetch.status === 500) {
+        const isResp = await isFetch.json();
+        alert(isResp.message);
       } else if (isFetch.status === 200) {
         const isResp = await isFetch.json();
         setUsers(isResp);

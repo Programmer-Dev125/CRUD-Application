@@ -14,6 +14,9 @@ export default function Delete({ tag, handleMain, updateDelete }) {
     } else if (isFetch.status === 400) {
       const isResp = await isFetch.json();
       alert(isResp.message);
+    } else if (isFetch.status === 500) {
+      const isResp = await isFetch.json();
+      alert(isResp.message);
     }
     return;
   }
