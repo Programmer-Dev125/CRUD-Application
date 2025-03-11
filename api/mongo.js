@@ -32,7 +32,7 @@ export default async function handleServer(req, res) {
       res.end();
       break;
     case "GET":
-      const data = await isModel.find({}, { _id: 0 });
+      const data = await isModel.find({}, { _id: 0, __v: 0 });
       if (Array.isArray(data)) {
         res.writeHead(200);
         res.end(JSON.stringify(data));
