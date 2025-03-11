@@ -10,7 +10,7 @@ if (!URL) {
 const conn = mongoose.createConnection(URL);
 const isModel = conn.model(
   "myModel",
-  new Schema({ id: Number, name: String, Age: Number, email: String }),
+  new Schema({ id: Number, name: String, age: Number, email: String }),
   coll
 );
 
