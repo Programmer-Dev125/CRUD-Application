@@ -53,7 +53,6 @@ export default async function handleServer(req, res) {
 
             const isObj = JSON.parse(requestBody);
 
-            // Check for existing user in a single query
             const existingUser = await isModel.findOne({
               $or: [
                 { name: { $regex: new RegExp(`^${isObj.name}$`, "i") } },
