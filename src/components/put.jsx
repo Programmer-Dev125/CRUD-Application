@@ -7,15 +7,18 @@ export default function Put({ tag, handleMain, updatePut }) {
 
   async function handleUpdate(e) {
     e.preventDefault();
-    const isFetch = await fetch("http://localhost:3000/users", {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-        "x-user-id": tag.id,
-        authorization: `${btoa("AbdulAhad2abc1071099")}`,
-      },
-      body: JSON.stringify({ name: name, age: age, email: email }),
-    });
+    const isFetch = await fetch(
+      "https://crud-application-nine-kohl.vercel.app/api/mongo",
+      {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          "x-user-id": tag.id,
+          authorization: `${btoa("AbdulAhad2abc1071099")}`,
+        },
+        body: JSON.stringify({ name: name, age: age, email: email }),
+      }
+    );
     if (isFetch.status === 200) {
       const isResp = await isFetch.json();
       alert(isResp.message);

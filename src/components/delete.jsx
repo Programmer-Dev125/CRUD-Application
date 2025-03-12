@@ -1,12 +1,15 @@
 export default function Delete({ tag, handleMain, updateDelete }) {
   async function handleDelete() {
-    const isFetch = await fetch("http://localhost:3000/users", {
-      method: "DELETE",
-      headers: {
-        "x-del-id": tag.id,
-        authorization: `${btoa("AbdulAhad2abc1071099")}`,
-      },
-    });
+    const isFetch = await fetch(
+      "https://crud-application-nine-kohl.vercel.app/api/mongo",
+      {
+        method: "DELETE",
+        headers: {
+          "x-del-id": tag.id,
+          authorization: `${btoa("AbdulAhad2abc1071099")}`,
+        },
+      }
+    );
     if (isFetch.status === 200) {
       const isResp = await isFetch.json();
       alert(isResp.message);
