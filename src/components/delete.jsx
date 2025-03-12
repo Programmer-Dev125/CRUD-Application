@@ -12,15 +12,13 @@ export default function Delete({ tag, handleMain, updateDelete }) {
     );
     if (isFetch.status === 200) {
       const isResp = await isFetch.json();
-      alert(isResp.message);
+      alert(isResp.success);
       updateDelete();
     } else if (isFetch.status === 400) {
       const isResp = await isFetch.json();
-      alert(isResp.message);
-    } else if (isFetch.status === 500) {
-      const isResp = await isFetch.json();
-      alert(isResp.message);
+      alert(isResp.error);
     }
+
     return;
   }
   return (

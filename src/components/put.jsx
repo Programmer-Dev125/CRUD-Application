@@ -21,11 +21,11 @@ export default function Put({ tag, handleMain, updatePut }) {
     );
     if (isFetch.status === 200) {
       const isResp = await isFetch.json();
-      alert(isResp.message);
+      alert(isResp.success);
       updatePut();
     } else if (isFetch.status === 400) {
       const isResp = await isFetch.json();
-      alert(isResp.message);
+      alert(isResp.error);
     }
     return;
   }
