@@ -14,8 +14,6 @@ const isModel = conn.model(
   coll
 );
 
-await conn.asPromise();
-
 export default async function handleServer(req, res) {
   res.setHeader(
     "access-control-allow-origin",
@@ -27,6 +25,8 @@ export default async function handleServer(req, res) {
     "access-control-allow-headers",
     "content-type, x-user-id, authorization"
   );
+
+  await conn.asPromise();
 
   switch (req.method) {
     case "OPTIONS":
