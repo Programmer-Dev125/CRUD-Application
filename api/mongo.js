@@ -55,7 +55,7 @@ export default async function handleServer(req, res) {
             email: { $regex: new RegExp(`^${isBody.email}$`, "i") },
           });
           if (hasNameExist === null && hasEmailExist === null) {
-            const lastId = await isModel.find({}, { _id: 0 }).sort({
+            const lastId = await isModel.findOne({}, { _id: 0 }).sort({
               id: -1,
             });
             const isId = lastId ? lastId + 1 : 1;
