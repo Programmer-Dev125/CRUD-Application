@@ -8,6 +8,7 @@ if (!URL) {
 }
 
 const conn = await mongoose.createConnection(URL).asPromise();
+
 const isModel = conn.model(
   "myModel",
   new Schema({ id: Number, name: String, age: Number, email: String }),
@@ -26,106 +27,128 @@ export default async function handleServer(req, res) {
     "content-type, x-user-id, authorization"
   );
 
-  switch (req.method) {
-    case "OPTIONS":
-      res.writeHead(200);
-      res.end();
-      break;
-    case "GET":
-      const data = await isModel.find({}, { _id: 0, __v: 0 });
-      if (Array.isArray(data)) {
+  try {
+    switch (req.method) {
+      case "OPTIONS":
         res.writeHead(200);
-        res.end(JSON.stringify(data));
-      } else {
-        res.writeHead(500);
-        res.end(JSON.stringify({ error: "Error fetching data" }));
-      }
-      break;
-    case "POST":
-      let isBody;
-      req.on("data", (data) => {
-        isBody = JSON.parse(data.toString());
-      });
-      req.on("end", () => {
-        (async () => {
-          const hasNameExist = await isModel.exists({
-            name: { $regex: new RegExp(`^${isBody.name}$`, "i") },
-          });
-          const hasEmailExist = await isModel.exists({
-            email: { $regex: new RegExp(`^${isBody.email}$`, "i") },
-          });
-          if (hasNameExist === null && hasEmailExist === null) {
+        return res.end();
+
+      case "GET":
+        const data = await isModel.find({}, { _id: 0, __v: 0 });
+        res.writeHead(200);
+        return res.end(JSON.stringify(data));
+
+      case "POST": {
+        let requestBody = "";
+        req.on("data", (chunk) => {
+          requestBody += chunk;
+        });
+
+        req.on("end", async () => {
+          try {
+            if (!requestBody) {
+              res.writeHead(400);
+              return res.end(JSON.stringify({ error: "Empty request body" }));
+            }
+
+            const isObj = JSON.parse(requestBody);
+
+            // Check for existing user in a single query
+            const existingUser = await isModel.findOne({
+              $or: [
+                { name: { $regex: new RegExp(`^${isObj.name}$`, "i") } },
+                { email: { $regex: new RegExp(`^${isObj.email}$`, "i") } },
+              ],
+            });
+
+            if (existingUser) {
+              res.writeHead(409);
+              return res.end(
+                JSON.stringify({ error: "Username or email already exists" })
+              );
+            }
+
             const lastDoc = await isModel.findOne().sort({ _id: -1 }).lean();
-            const isId = lastDoc.id ? lastDoc.id + 1 : 1;
-            const toCreate = await isModel.create(
+            const isId = lastDoc?.id ? lastDoc.id + 1 : 1;
+
+            await isModel.create({
+              id: isId,
+              name: isObj.name,
+              age: parseInt(isObj.age),
+              email: isObj.email,
+            });
+
+            res.writeHead(201);
+            res.end(JSON.stringify({ success: "User Submitted" }));
+          } catch (err) {
+            res.writeHead(400);
+            res.end(JSON.stringify({ error: "Invalid JSON format" }));
+          }
+        });
+        break;
+      }
+
+      case "PUT": {
+        const putId = parseInt(req.headers["x-user-id"]);
+        let putData = "";
+        req.on("data", (chunk) => {
+          putData += chunk;
+        });
+
+        req.on("end", async () => {
+          try {
+            if (!putData) {
+              res.writeHead(400);
+              return res.end(JSON.stringify({ error: "Empty request body" }));
+            }
+
+            const isPutObj = JSON.parse(putData);
+            const toUpdate = await isModel.updateOne(
+              { id: putId },
               {
-                id: isId,
-                name: isBody.name,
-                age: parseInt(isBody.age),
-                email: isBody.email,
-              },
-              { ordered: true }
+                name: isPutObj.name,
+                age: parseInt(isPutObj.age),
+                email: isPutObj.email,
+              }
             );
-            if (toCreate) {
-              res.writeHead(201);
-              res.end(JSON.stringify({ success: "User Submitted" }));
+
+            if (toUpdate.modifiedCount === 1) {
+              res.writeHead(200);
+              res.end(
+                JSON.stringify({ success: "The user credentials are updated" })
+              );
             } else {
               res.writeHead(400);
-              res.end(JSON.stringify({ error: "Error submitting data" }));
+              res.end(
+                JSON.stringify({ error: "Error updating the user credentials" })
+              );
             }
-          } else {
-            res.writeHead(409);
-            res.end(
-              JSON.stringify({ error: "Username or email already exists" })
-            );
-          }
-        })();
-      });
-      break;
-    case "PUT":
-      const putId = parseInt(req.headers["x-user-id"]);
-      let putData;
-      req.on("data", (data) => {
-        putData = JSON.parse(data.toString());
-      });
-      req.on("end", () => {
-        (async () => {
-          const toUpdate = await isModel.updateOne(
-            { id: putId },
-            {
-              name: putData.name,
-              age: parseInt(putData.age),
-              email: putData.email,
-            }
-          );
-          if (toUpdate.modifiedCount === 1) {
-            res.writeHead(200);
-            res.end(
-              JSON.stringify({ success: "The user credentials are updated" })
-            );
-          } else {
+          } catch (err) {
             res.writeHead(400);
-            res.end(
-              JSON.stringify({ error: "Error updating the user credentials" })
-            );
+            res.end(JSON.stringify({ error: "Invalid JSON format" }));
           }
-        })();
-      });
-      break;
-    case "DELETE":
-      const delId = parseInt(req.headers["x-del-id"]);
-      const hasDelete = await isModel.deleteOne({ id: delId });
-      if (hasDelete.deletedCount === 1) {
-        res.writeHead(200);
-        res.end(JSON.stringify({ success: "The user has been deleted" }));
-      } else {
-        res.writeHead(400);
-        res.end(JSON.stringify({ error: "Error deleting the user" }));
+        });
+        break;
       }
-      break;
-    default:
-      res.writeHead(405);
-      res.end(JSON.stringify({ error: "Method not allowed" }));
-      break;
+
+      case "DELETE":
+        const delId = parseInt(req.headers["x-del-id"]);
+        const hasDelete = await isModel.deleteOne({ id: delId });
+        if (hasDelete.deletedCount === 1) {
+          res.writeHead(200);
+          res.end(JSON.stringify({ success: "The user has been deleted" }));
+        } else {
+          res.writeHead(400);
+          res.end(JSON.stringify({ error: "Error deleting the user" }));
+        }
+        break;
+
+      default:
+        res.writeHead(405);
+        res.end(JSON.stringify({ error: "Method not allowed" }));
+    }
+  } catch (error) {
+    res.writeHead(500);
+    res.end(JSON.stringify({ error: "Internal Server Error" }));
   }
 }
