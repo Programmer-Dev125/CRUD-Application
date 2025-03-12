@@ -71,12 +71,15 @@ export default async function handleServer(req, res) {
             }
             const lastId = await isModel.findOne().sort({ _id: -1 }).lean();
             const isId = lastId?.id ? lastId + 1 : 1;
-            const toCreate = await isModel.create({
-              id: isId,
-              name: isObj.name,
-              age: parseInt(isObj.age),
-              email: isObj.email,
-            });
+            const toCreate = await isModel.create(
+              {
+                id: isId,
+                name: isObj.name,
+                age: parseInt(isObj.age),
+                email: isObj.email,
+              },
+              { ordered: true }
+            );
             if (!toCreate) {
               res.writeHead(400);
               return res.end(
@@ -84,7 +87,7 @@ export default async function handleServer(req, res) {
               );
             }
             res.writeHead(201);
-            res.end(JSON.stringify({ success: "The user is created" }));
+            return res.end(JSON.stringify({ success: "The user is created" }));
           })();
         });
         break;
