@@ -59,7 +59,7 @@ export default async function handleServer(req, res) {
               id: -1,
             });
             const isId = lastId ? lastId + 1 : 1;
-            const toCreate = await isModel.create(
+            const toCreate = await isModel.insertMany(
               {
                 id: isId,
                 name: isBody.name,
