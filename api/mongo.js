@@ -59,7 +59,7 @@ export default async function handleServer(req, res) {
           if (hasNameExist === null && hasEmailExist === null) {
             const lastDoc = await isModel.findOne().sort({ _id: -1 }).lean();
             const isId = lastDoc.id ? lastDoc.id + 1 : 1;
-            const toCreate = await isModel.insertMany(
+            const toCreate = await isModel.create(
               {
                 id: isId,
                 name: isBody.name,
