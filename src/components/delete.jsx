@@ -3,7 +3,7 @@ export default function Delete({ tag, handleMain, updateDelete }) {
     const isFetch = await fetch("http://localhost:3000/users", {
       method: "DELETE",
       headers: {
-        "x-user-id": tag.id,
+        "x-del-id": tag.id,
         authorization: `${btoa("AbdulAhad2abc1071099")}`,
       },
     });
