@@ -13,21 +13,40 @@ export default function Put({ tag, handleMain, updatePut }) {
         method: "PUT",
         headers: {
           "content-type": "application/json",
-          "x-user-id": tag.id,
-          authorization: `${btoa("AbdulAhad2abc1071099")}`,
+          "x-put-id": tag.id,
         },
         body: JSON.stringify({ name: name, age: age, email: email }),
       }
     );
-    if (isFetch.status === 200) {
-      const isResp = await isFetch.json();
-      alert(isResp.success);
-      updatePut();
-    } else if (isFetch.status === 400) {
-      const isResp = await isFetch.json();
-      alert(isResp.error);
+    switch (isFetch.status) {
+      case 200:
+        {
+          const isResp = await isFetch.json();
+          alert(isResp.success);
+          updatePut();
+        }
+        break;
+      case 400:
+        {
+          const isResp = await isFetch.json();
+          alert(isResp.error);
+        }
+        break;
+      case 500:
+        {
+          const isResp = await isFetch.json();
+          alert(isResp.error);
+        }
+        break;
+      case 204:
+        {
+          console.log("The update is the same");
+        }
+        break;
+      default:
+        console.log("invalid user");
+        break;
     }
-    return;
   }
 
   return (

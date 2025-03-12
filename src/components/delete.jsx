@@ -6,20 +6,33 @@ export default function Delete({ tag, handleMain, updateDelete }) {
         method: "DELETE",
         headers: {
           "x-del-id": tag.id,
-          authorization: `${btoa("AbdulAhad2abc1071099")}`,
         },
       }
     );
-    if (isFetch.status === 200) {
-      const isResp = await isFetch.json();
-      alert(isResp.success);
-      updateDelete();
-    } else if (isFetch.status === 400) {
-      const isResp = await isFetch.json();
-      alert(isResp.error);
+    switch (isFetch.status) {
+      case 200:
+        {
+          const isResp = await isFetch.json();
+          alert(isResp.success);
+          updateDelete();
+        }
+        break;
+      case 500:
+        {
+          const isResp = await isFetch.json();
+          console.log(isResp);
+        }
+        break;
+      case 400:
+        {
+          const isResp = await isFetch.json();
+          console.log(isResp);
+        }
+        break;
+      default:
+        console.log("invalid user");
+        break;
     }
-
-    return;
   }
   return (
     <>

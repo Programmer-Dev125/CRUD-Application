@@ -25,26 +25,44 @@ export default function Post({ updateState }) {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          authorization: `${btoa("AbdulAhad2abc1071099")}`,
         },
         body: JSON.stringify({ name: user, age: age, email: email }),
       }
     );
-    if (isFetch.status === 201) {
-      const isResp = await isFetch.json();
-      alert(isResp.success);
-      updateState();
-    } else if (isFetch.status === 400) {
-      const isFailure = await isFetch.json();
-      alert(isFailure.error);
-    } else if (isFetch.status === 409) {
-      const isConflict = await isFetch.json();
-      alert(isConflict.error);
+    switch (isFetch.status) {
+      case 201:
+        {
+          const isResp = await isFetch.json();
+          alert(isResp.success);
+          updateState();
+        }
+        break;
+      case 400:
+        {
+          const isResp = await isFetch.json();
+          alert(isResp.error);
+        }
+        break;
+      case 409:
+        {
+          const isResp = await isFetch.json();
+          alert(isResp.error);
+        }
+        break;
+      case 500:
+        {
+          const isResp = await isFetch.json();
+          alert(isResp.error);
+        }
+        break;
+      default:
+        console.log("invalid request");
+        break;
     }
+
     setUser("");
     setAge("");
     setEmail("");
-    return;
   }
 
   function handleChange(e) {

@@ -10,21 +10,24 @@ export default function Main() {
     (async () => {
       const isFetch = await fetch(
         "https://crud-application-nine-kohl.vercel.app/api/mongo",
-        {
-          headers: {
-            Authorization: `${btoa("AbdulAhad2abc1071099")}`,
-          },
-        }
+        {}
       );
-      if (isFetch.status === 401) {
-        const isResp = await isFetch.text();
-        alert(isResp);
-      } else if (isFetch.status === 500) {
-        const isResp = await isFetch.json();
-        alert(isResp.error);
-      } else if (isFetch.status === 200) {
-        const isResp = await isFetch.json();
-        setUsers(isResp);
+      switch (isFetch.status) {
+        case 200:
+          {
+            const isResp = await isFetch.json();
+            setUsers(isResp);
+          }
+          break;
+        case 500:
+          {
+            const isResp = await isFetch.json();
+            console.log(isResp);
+          }
+          break;
+        default:
+          console.log("To store");
+          break;
       }
     })();
   }, [isUpdate]);
