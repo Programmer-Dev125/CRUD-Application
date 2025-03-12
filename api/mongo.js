@@ -14,6 +14,8 @@ const isModel = conn.model(
   coll
 );
 
+await conn.asPromise();
+
 export default async function handleServer(req, res) {
   res.setHeader(
     "access-control-allow-origin",
