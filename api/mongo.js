@@ -7,7 +7,7 @@ if (!URL) {
   throw new Error("Mongo URL is not defined in environment variables");
 }
 
-const conn = mongoose.createConnection(URL);
+const conn = await mongoose.createConnection(URL).asPromise();
 const isModel = conn.model(
   "myModel",
   new Schema({ id: Number, name: String, age: Number, email: String }),
@@ -25,8 +25,6 @@ export default async function handleServer(req, res) {
     "access-control-allow-headers",
     "content-type, x-user-id, authorization"
   );
-
-  await conn.asPromise();
 
   switch (req.method) {
     case "OPTIONS":
