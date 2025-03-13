@@ -15,6 +15,23 @@ export default async function handleUpdate(model, req, res) {
       return res.end(JSON.stringify({ error: "Empty request body" }));
     }
 
+    const isName = /^[0-9A-Za-z ]*$/.test(isPutObj.name);
+    const isAge = /^[0-9]*$/.test(parseInt(isPutObj.age));
+    const isEmail = /^[A-Za-z0-9]*@gmail\.com$/.test(isPutObj.email);
+
+    if (!isName) {
+      res.writeHead(400);
+      return res.end(JSON.stringify({ error: "Incorrect Name" }));
+    }
+    if (!isAge) {
+      res.writeHead(400);
+      return res.end(JSON.stringify({ error: "Invalid Age" }));
+    }
+    if (!isEmail) {
+      res.writeHead(400);
+      return res.end(JSON.stringify({ error: "Invalid Email" }));
+    }
+
     (async () => {
       const isDuplicate = await model.find({ id: isId }, { _id: 0, __v: 0 });
       if (!isDuplicate) {

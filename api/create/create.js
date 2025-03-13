@@ -10,6 +10,23 @@ export default async function handleCreate(model, req, res) {
       res.writeHead(400);
       return res.end(JSON.stringify({ error: "Request body missing" }));
     }
+    const isName = /^[0-9A-Za-z ]*$/.test(isPostObj.name);
+    const isAge = /^[0-9]*$/.test(parseInt(isPostObj.age));
+    const isEmail = /^[A-Za-z0-9]*@gmail\.com$/.test(isPostObj.email);
+
+    if (!isName) {
+      res.writeHead(400);
+      return res.end(JSON.stringify({ error: "Incorrect Name" }));
+    }
+    if (!isAge) {
+      res.writeHead(400);
+      return res.end(JSON.stringify({ error: "Invalid Age" }));
+    }
+    if (!isEmail) {
+      res.writeHead(400);
+      return res.end(JSON.stringify({ error: "Invalid Email" }));
+    }
+
     (async () => {
       const isExist = await model.exists({
         $or: [
