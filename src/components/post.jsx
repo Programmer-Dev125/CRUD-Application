@@ -57,7 +57,7 @@ export default function Post({ updateState }) {
         }
         break;
       default:
-        console.log("invalid request");
+        alert("Invalid Request");
         break;
     }
 

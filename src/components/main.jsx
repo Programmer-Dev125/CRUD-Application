@@ -5,9 +5,12 @@ import Post from "./post";
 export default function Main() {
   const [users, setUsers] = useState([]);
   const [isUpdate, setIsUpdate] = useState(0);
+  const [isSending, setIsSending] = useState(false);
+  const [message, setMessage] = useState("Fetching...");
 
   useEffect(() => {
     (async () => {
+      setIsSending(true);
       const isFetch = await fetch(
         "https://crud-application-nine-kohl.vercel.app/api/mongo",
         {
@@ -20,17 +23,20 @@ export default function Main() {
         case 200:
           {
             const isResp = await isFetch.json();
+            setIsSending(false);
             setUsers(isResp);
           }
           break;
         case 500:
           {
             const isResp = await isFetch.json();
+            setIsSending(false);
             console.log(isResp);
           }
           break;
         default:
           console.log("To store");
+          setIsSending(false);
           break;
       }
     })();
@@ -46,6 +52,13 @@ export default function Main() {
           isDelete={() => setIsUpdate((n) => n + 1)}
         />
       </div>
+      {isSending && (
+        <div className="sending-fix">
+          <div className="sending-fix-content">
+            <p>{message}</p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
