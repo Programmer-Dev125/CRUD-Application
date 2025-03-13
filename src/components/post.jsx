@@ -25,6 +25,7 @@ export default function Post({ updateState }) {
         method: "POST",
         headers: {
           "content-type": "application/json",
+          authorization: "QWJkdWxBaGFkV2VkbmVzZGF5TWFyY2gxMjIwMjU",
         },
         body: JSON.stringify({ name: user, age: age, email: email }),
       }

@@ -10,7 +10,11 @@ export default function Main() {
     (async () => {
       const isFetch = await fetch(
         "https://crud-application-nine-kohl.vercel.app/api/mongo",
-        {}
+        {
+          headers: {
+            authorization: "QWJkdWxBaGFkV2VkbmVzZGF5TWFyY2gxMjIwMjU",
+          },
+        }
       );
       switch (isFetch.status) {
         case 200:

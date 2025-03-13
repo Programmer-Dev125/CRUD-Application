@@ -6,6 +6,7 @@ export default function Delete({ tag, handleMain, updateDelete }) {
         method: "DELETE",
         headers: {
           "x-del-id": tag.id,
+          // authorization: "QWJkdWxBaGFkV2VkbmVzZGF5TWFyY2gxMjIwMjU",
         },
       }
     );

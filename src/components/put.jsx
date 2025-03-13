@@ -14,6 +14,7 @@ export default function Put({ tag, handleMain, updatePut }) {
         headers: {
           "content-type": "application/json",
           "x-put-id": tag.id,
+          authorization: "QWJkdWxBaGFkV2VkbmVzZGF5TWFyY2gxMjIwMjU",
         },
         body: JSON.stringify({ name: name, age: age, email: email }),
       }

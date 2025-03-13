@@ -6,6 +6,7 @@ import handleDelete from "./delete/delete.js";
 
 const URL = process.env.MONGO_URL;
 const isColl = process.env.COLLECTION;
+const ApiKey = process.env.API_KEY;
 
 const conn = await mongoose.createConnection(URL);
 
@@ -32,6 +33,17 @@ export default async function handleServer(req, res) {
     "content-type, x-put-id, x-del-id, authorization"
   );
   res.setHeader("content-type", "application/json");
+
+  const isAuthorize = req.headers.authorization;
+  if (!isAuthorize) {
+    res.writeHead(400);
+    return res.end(JSON.stringify({ error: "Lacks api key" }));
+  }
+
+  if (isAuthorize !== ApiKey) {
+    res.writeHead(401, { "www-authenticate": "Bearer API_TOKEN" });
+    return res.end(JSON.stringify({ error: "Invalid Authentication key" }));
+  }
 
   switch (req.method) {
     case "OPTIONS":
